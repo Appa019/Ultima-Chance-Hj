@@ -3,12 +3,11 @@
 
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-from math import pi
 import json
 import re
 import tempfile
 import os
+from math import pi
 
 # Imports com tratamento de erro específico
 try:
@@ -16,42 +15,46 @@ try:
     OPENAI_AVAILABLE = True
 except ImportError as e:
     OPENAI_AVAILABLE = False
-    st.error(f"❌ Erro ao importar OpenAI: {str(e)}")
-    st.info("💡 Verifique se o arquivo requirements.txt está na raiz do repositório")
 
 try:
     import fitz  # PyMuPDF
     PYMUPDF_AVAILABLE = True
 except ImportError as e:
     PYMUPDF_AVAILABLE = False
-    st.error(f"❌ Erro ao importar PyMuPDF: {str(e)}")
-    st.info("💡 Certifique-se de que 'pymupdf==1.23.8' está no requirements.txt")
 
-# Configurações visuais do Matplotlib
-plt.rcParams['figure.figsize'] = [10, 6]
-plt.rcParams['font.size'] = 12
+try:
+    import matplotlib.pyplot as plt
+    MATPLOTLIB_AVAILABLE = True
+    # Configurações visuais do Matplotlib
+    plt.rcParams['figure.figsize'] = [10, 6]
+    plt.rcParams['font.size'] = 12
+except ImportError as e:
+    MATPLOTLIB_AVAILABLE = False
 
 # Configuração da página
 st.set_page_config(page_title="Assistente de Análise InternReady", page_icon="🚀", layout="wide")
 st.title("🚀 Assistente de Análise InternReady")
 st.markdown("### Análise de currículo especializada para o setor financeiro")
 
-# Status das dependências (debug)
-if not OPENAI_AVAILABLE or not PYMUPDF_AVAILABLE:
-    st.warning("⚠️ Algumas dependências não estão disponíveis. Verifique o requirements.txt")
-    with st.expander("🔍 Status das Dependências"):
-        st.write(f"OpenAI: {'✅ OK' if OPENAI_AVAILABLE else '❌ Erro'}")
-        st.write(f"PyMuPDF: {'✅ OK' if PYMUPDF_AVAILABLE else '❌ Erro'}")
-        st.code("""
-# Conteúdo esperado do requirements.txt:
-streamlit==1.32.0
+# Verificar dependências
+missing_deps = []
+if not OPENAI_AVAILABLE:
+    missing_deps.append("openai")
+if not PYMUPDF_AVAILABLE:
+    missing_deps.append("pymupdf")
+if not MATPLOTLIB_AVAILABLE:
+    missing_deps.append("matplotlib")
+
+if missing_deps:
+    st.error(f"❌ Bibliotecas não encontradas: {', '.join(missing_deps)}")
+    st.info("💡 Certifique-se de que o requirements.txt está correto e na raiz do repositório")
+    with st.expander("📋 Requirements.txt necessário"):
+        st.code("""streamlit==1.32.0
 openai==1.12.0
 pymupdf==1.23.8
 pandas>=1.5.0
-matplotlib>=3.5.0
-        """)
-    if not OPENAI_AVAILABLE or not PYMUPDF_AVAILABLE:
-        st.stop()
+matplotlib>=3.5.0""")
+    st.stop()
 
 # Sidebar com configurações
 with st.sidebar:
@@ -336,8 +339,6 @@ Texto do currículo:
         except Exception as e:
             st.error(f"❌ Erro durante a análise: {str(e)}")
             st.info("Verifique se sua chave de API está correta e se você tem créditos disponíveis.")
-            import traceback
-            st.code(traceback.format_exc())
 
 elif uploaded_file and not api_key:
     st.warning("⚠️ Insira sua chave de API para continuar.")
