@@ -37,29 +37,25 @@ if uploaded_file and api_key:
                 texto_curriculo += page.get_text()
             doc.close()
 
-            prompt = f"""
-Você é um consultor de carreira especializado em perfis voltados para o setor financeiro. Sua tarefa é analisar o currículo abaixo com base em competências valorizadas nesse mercado.
+prompt = (
+    "Você é um consultor de carreira especializado em perfis voltados para o setor financeiro. "
+    "Sua tarefa é analisar o currículo abaixo com base em competências valorizadas nesse mercado.\n\n"
+    "**Parte 1 – Análise Quantitativa**\n"
+    "- Identifique as principais **áreas de competência profissional** (ex: Finanças, Economia, Risco, Análise de Dados, Excel, Programação, Comunicação, etc.).\n"
+    "- Para cada área, atribua uma nota de **0 a 100**, com base nas evidências fornecidas no texto como um especialista em recursos humanos com muitos anos de prática. **Não infira habilidades não mencionadas.**\n"
+    "- A resposta deve estar no formato JSON conforme exemplo:\n\n"
+    "[\n"
+    "  {\"Área\": \"Gestão Financeira\", \"Pontuação\": 82},\n"
+    "  {\"Área\": \"Excel Avançado\", \"Pontuação\": 78}\n"
+    "]\n\n"
+    "**Parte 2 – Análise Qualitativa (em português)**\n"
+    "- Pontos fortes mais evidentes\n"
+    "- Pontos que podem ser melhor desenvolvidos ou explicitados\n"
+    "- Sugestões práticas para aprimorar o currículo para o mercado financeiro\n\n"
+    "Texto do currículo:\n"
+    f"\"\"\"\n{texto_curriculo}\n\"\"\""
+)
 
-**Parte 1 – Análise Quantitativa**
-- Identifique as principais **áreas de competência profissional** (ex: Finanças, Economia, Risco, Análise de Dados, Excel, Programação, Comunicação, etc.).
-- Para cada área, atribua uma nota de **0 a 100**, com base nas evidências fornecidas no texto como um especialista em recursos humanos com muitos anos de prática. **Não infira habilidades não mencionadas.**
-- A resposta deve estar no formato JSON conforme exemplo:
-
-[
-  {{"Área": "Gestão Financeira", "Pontuação": 82}},
-  {{"Área": "Excel Avançado", "Pontuação": 78}}
-]
-
-**Parte 2 – Análise Qualitativa (em português)**
-- Pontos fortes mais evidentes
-- Pontos que podem ser melhor desenvolvidos ou explicitados
-- Sugestões práticas para aprimorar o currículo para o mercado financeiro
-
-Texto do currículo:
-"""
-{texto_curriculo}
-"""
-"""
 
             with st.spinner("⏳ Analisando com IA..."):
                 response = openai.chat.completions.create(
