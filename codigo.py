@@ -2,7 +2,7 @@
 """Assistente de Analise InternReady - Streamlit App"""
 
 import streamlit as st
-from openai import OpenAI
+import openai
 import fitz  # PyMuPDF
 import pandas as pd
 import matplotlib.pyplot as plt
