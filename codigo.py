@@ -138,7 +138,7 @@ if uploaded_file and api_key:
                 doc.close()
             except Exception as e:
                 st.error(f"❌ Erro ao processar PDF: {str(e)}")
-                continue
+                return
             finally:
                 # Limpar arquivo temporário de forma segura
                 try:
@@ -149,7 +149,7 @@ if uploaded_file and api_key:
 
             if not texto_curriculo.strip():
                 st.error("❌ Não foi possível extrair texto do PDF. Verifique se o arquivo não está protegido.")
-                continue
+                return
 
             st.success(f"✅ Currículo carregado com sucesso: `{uploaded_file.name}`")
 
@@ -193,7 +193,7 @@ Texto do currículo:
                 except Exception as api_error:
                     st.error(f"❌ Erro na API OpenAI: {str(api_error)}")
                     st.info("Verifique se sua chave de API está correta e se você tem créditos disponíveis.")
-                    continue
+                    return
 
             st.success("✅ Análise concluída.")
 
@@ -204,7 +204,7 @@ Texto do currículo:
                 st.error("❌ Erro: Não foi possível extrair os dados de competências.")
                 st.text("Resposta da IA:")
                 st.text(resposta_completa)
-                continue
+                return
             
             # Validar estrutura dos dados
             dados_validos = []
@@ -222,7 +222,7 @@ Texto do currículo:
             
             if not dados_validos:
                 st.error("❌ Nenhum dado válido encontrado na resposta.")
-                continue
+                return
                 
             df = pd.DataFrame(dados_validos)
             df = df.sort_values(by="Pontuação", ascending=True)
