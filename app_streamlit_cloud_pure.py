@@ -1,5 +1,5 @@
 import streamlit as st
-from openai import OpenAI
+import OpenAI
 import plotly.express as px
 import plotly.graph_objects as go
 import json
