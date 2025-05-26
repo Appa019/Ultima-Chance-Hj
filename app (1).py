@@ -1,5 +1,5 @@
 import streamlit as st
-import fitz  # PyMuPDF
+from pymupdf import fitz  # PyMuPDF
 from openai import OpenAI
 import pandas as pd
 import matplotlib.pyplot as plt
