@@ -37,7 +37,7 @@ if uploaded_file and api_key:
                 texto_curriculo += page.get_text()
             doc.close()
 
-prompt = (
+        prompt = (
     "Você é um consultor de carreira especializado em perfis voltados para o setor financeiro. "
     "Sua tarefa é analisar o currículo abaixo com base em competências valorizadas nesse mercado.\n\n"
     "**Parte 1 – Análise Quantitativa**\n"
